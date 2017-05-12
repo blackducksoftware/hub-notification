@@ -1,0 +1,41 @@
+#  common configuration section
+spring:
+  profiles.active: local
+---
+hub:
+    username: sysadmin
+    password: blackduck
+    timeout: 120000
+    serverurl: http://eng-hub-valid03.dc1.lan
+    cronExpression: 0 0/1 * 1/1 * *
+    
+spring:
+    batch.job.enabled: true
+---
+#  development configuration section 0 0/1 * * * *
+spring:
+    profiles: development
+---
+#  integration configuration section
+spring:
+    profiles: integration
+---
+#  webnet integration configuration section
+spring:
+    profiles: webnet-integration
+---
+#  qa configuration section
+spring:
+    profiles: qa
+---
+#  staging configuration section
+spring:
+    profiles: staging
+---
+#  demo configuration section
+spring:
+    profiles: demo
+---
+#  production configuration section
+spring:
+    profiles: production
