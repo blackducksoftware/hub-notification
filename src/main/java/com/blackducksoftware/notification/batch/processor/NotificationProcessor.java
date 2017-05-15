@@ -70,7 +70,7 @@ public class NotificationProcessor implements ItemProcessor<NotificationResults,
 		SortedSet<NotificationContentItem>  contentItems = item.getNotificationContentItems();
 		contentItems.forEach(contentItem -> {
 			StringBuilder builder = new StringBuilder(1000);
-			builder.append("\n Project Version : ");
+			builder.append("\n\n Project Version : ");
 			builder.append(contentItem.getProjectVersion() + "\n");
 			builder.append("Created At : ");
 			builder.append(contentItem.getCreatedAt() + "\n");
@@ -84,7 +84,7 @@ public class NotificationProcessor implements ItemProcessor<NotificationResults,
 			builder.append(contentItem.getComponentVersionUrl() + "\n");
 			builder.append("Created AT : ");
 			builder.append(contentItem.getCreatedAt());
-			builder.append("=================================================");
+			builder.append("================================================= \n");
 			logger.info(builder.toString());
 		});
 		return item;

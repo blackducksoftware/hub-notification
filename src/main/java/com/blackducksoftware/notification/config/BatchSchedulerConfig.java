@@ -27,6 +27,11 @@ public class BatchSchedulerConfig {
     public ResourcelessTransactionManager transactionManager() {
         return new ResourcelessTransactionManager();
     }
+    
+    @Bean
+    public ResourcelessTransactionManager getTransactionManager() {
+        return new ResourcelessTransactionManager();
+    }
 
     /**
      * Map job repository factory.
@@ -52,7 +57,7 @@ public class BatchSchedulerConfig {
      * @throws Exception the exception
      */
     @Bean
-    public JobRepository jobRepository(
+    public JobRepository getJobRepository(
             MapJobRepositoryFactoryBean factory) throws Exception {
         return factory.getObject();
     }
@@ -64,7 +69,7 @@ public class BatchSchedulerConfig {
      * @return the simple job launcher
      */
     @Bean
-    public SimpleJobLauncher jobLauncher(JobRepository jobRepository) {
+    public SimpleJobLauncher getJobLauncher(JobRepository jobRepository) {
         SimpleJobLauncher launcher = new SimpleJobLauncher();
         launcher.setJobRepository(jobRepository);
         return launcher;

@@ -24,7 +24,7 @@ public class NotificationWriter implements ItemWriter<NotificationResults>  {
 	 */
 	@Override
 	public void write(List<? extends NotificationResults> items) throws Exception {
-		log.info("NO OP");
+		//log.info("NO OP");
 		
 	}
 

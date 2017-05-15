@@ -18,10 +18,10 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.launch.support.SimpleJobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -32,13 +32,13 @@ import com.blackducksoftware.notification.batch.processor.NotificationProcessor;
 import com.blackducksoftware.notification.batch.reader.NotificationReader;
 import com.blackducksoftware.notification.batch.writer.NotificationWriter;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class BatchConfig.
  */
 @Configuration
 @EnableBatchProcessing
 @Import({BatchSchedulerConfig.class})
+@RefreshScope
 public class BatchConfig {
 	
     /** The job launcher. */
@@ -70,12 +70,13 @@ public class BatchConfig {
      * @throws Exception the exception
      */
     @Scheduled(cron = "#{@getCronExpression}")
-    public void perform() throws Exception {
+    public JobExecution perform() throws Exception {
         log.info("Job Started at :  " + new Date());
         JobParameters param = new JobParametersBuilder().addString("JobID",
                 String.valueOf(System.currentTimeMillis())).toJobParameters();
         JobExecution execution = jobLauncher.run(pollForNotificationJob(), param);
         log.info("Job finished with status :" + execution.getStatus());
+        return execution;
     }
 
     /**
@@ -111,7 +112,7 @@ public class BatchConfig {
     @Bean
     public TaskExecutor getTaskExecutor() {
     	ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(5);
+        executor.setCorePoolSize(1);
         executor.setMaxPoolSize(10);
         executor.setQueueCapacity(25);
         return executor;
