@@ -12,7 +12,9 @@ hub:
 spring:
     batch.job.enabled: true
     cloud.config.server.git.uri: /refresh-config
-    
+    activemq.broker-url: vm://localhost:61616
+    activemq.user: admin
+    activemq.password: admin
 ---
 #  development configuration section 0 0/1 * * * *
 spring:
@@ -21,10 +23,6 @@ spring:
 #  integration configuration section
 spring:
     profiles: integration
----
-#  webnet integration configuration section
-spring:
-    profiles: webnet-integration
 ---
 #  qa configuration section
 spring:

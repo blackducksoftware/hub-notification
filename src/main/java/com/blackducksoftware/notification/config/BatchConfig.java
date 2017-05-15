@@ -67,6 +67,7 @@ public class BatchConfig {
     /**
      * Perform.
      *
+     * @return the job execution
      * @throws Exception the exception
      */
     @Scheduled(cron = "#{@getCronExpression}")
@@ -109,6 +110,11 @@ public class BatchConfig {
         return new NotificationWriter();
     }
     
+    /**
+     * Gets the task executor.
+     *
+     * @return the task executor
+     */
     @Bean
     public TaskExecutor getTaskExecutor() {
     	ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

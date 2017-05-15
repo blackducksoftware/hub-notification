@@ -28,6 +28,11 @@ public class BatchSchedulerConfig {
         return new ResourcelessTransactionManager();
     }
     
+    /**
+     * Gets the transaction manager.
+     *
+     * @return the transaction manager
+     */
     @Bean
     public ResourcelessTransactionManager getTransactionManager() {
         return new ResourcelessTransactionManager();

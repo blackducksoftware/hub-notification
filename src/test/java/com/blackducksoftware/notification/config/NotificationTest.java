@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,14 +15,24 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.blackducksoftware.notification.Application;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class NotificationTest.
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 @SpringBootTest(classes = { Application.class })
 public class NotificationTest {
 
+	/** The notification config. */
 	@Autowired
 	private BatchConfig notificationConfig;
 	
+	/**
+	 * Test job.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void testJob() throws Exception {
 		JobExecution jobExecution = notificationConfig.perform();
