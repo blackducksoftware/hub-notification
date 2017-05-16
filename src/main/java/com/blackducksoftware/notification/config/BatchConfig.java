@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -31,13 +30,11 @@ import com.blackducksoftware.notification.batch.processor.JobCompletionNotificat
 import com.blackducksoftware.notification.batch.processor.NotificationProcessor;
 import com.blackducksoftware.notification.batch.reader.NotificationReader;
 import com.blackducksoftware.notification.batch.writer.NotificationWriter;
-
 /**
  * The Class BatchConfig.
  */
 @Configuration
 @EnableBatchProcessing
-@Import({BatchSchedulerConfig.class})
 @RefreshScope
 public class BatchConfig {
 	
@@ -60,6 +57,11 @@ public class BatchConfig {
     /** The notification config. */
     @Autowired
     public NotificationConfig notificationConfig;
+    
+    /** The jms config. */
+    @Autowired
+    public JMSConfig jmsConfig;
+    
     
     /** The Constant log. */
     private static final Logger log = LoggerFactory.getLogger(BatchConfig.class);
@@ -87,7 +89,7 @@ public class BatchConfig {
      */
     @Bean
     public NotificationReader getNotificationReader() {
-        return new NotificationReader(notificationConfig);
+        return new NotificationReader(notificationConfig, jmsConfig);
     }
     
     /**
@@ -97,7 +99,7 @@ public class BatchConfig {
      */
     @Bean
     public NotificationProcessor getNotificationProcessor() {
-        return new NotificationProcessor(notificationConfig);
+        return new NotificationProcessor(notificationConfig, jmsConfig);
     }
     
     /**

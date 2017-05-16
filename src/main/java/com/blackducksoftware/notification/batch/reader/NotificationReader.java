@@ -18,11 +18,8 @@ import org.springframework.stereotype.Component;
 
 import com.blackducksoftware.integration.hub.dataservice.notification.NotificationDataService;
 import com.blackducksoftware.integration.hub.dataservice.notification.NotificationResults;
-import com.blackducksoftware.integration.hub.rest.CredentialsRestConnection;
 import com.blackducksoftware.integration.hub.rest.RestConnection;
-import com.blackducksoftware.integration.hub.service.HubServicesFactory;
-import com.blackducksoftware.integration.log.LogLevel;
-import com.blackducksoftware.integration.log.PrintStreamIntLogger;
+import com.blackducksoftware.notification.config.JMSConfig;
 import com.blackducksoftware.notification.config.NotificationConfig;
 import com.blackducksoftware.notification.model.DateRange;
 
@@ -35,6 +32,9 @@ public class NotificationReader implements ItemReader<NotificationResults> {
 	/** The notification config. */
 	private NotificationConfig notificationConfig;
 	
+	/** The jms config. */
+	private JMSConfig jmsConfig;
+	
 	/** The last run path. */
 	private String lastRunPath;
 	
@@ -45,36 +45,14 @@ public class NotificationReader implements ItemReader<NotificationResults> {
 	 * Instantiates a new notification reader.
 	 *
 	 * @param notificationConfig the notification config
+	 * @param jmsConfig the jms config
 	 */
-	public NotificationReader(NotificationConfig  notificationConfig) {
+	public NotificationReader(NotificationConfig  notificationConfig, JMSConfig jmsConfig) {
 		this.notificationConfig = notificationConfig;
+		this.jmsConfig = jmsConfig;
 		lastRunPath = findLastRunFilePath();
-	}
+	}	
 
-	
-	/**
-	 * Gets the rest connection.
-	 *
-	 * @return the rest connection
-	 * @throws Exception the exception
-	 */
-	public RestConnection getRestConnection() throws Exception{		
-		return new CredentialsRestConnection(new PrintStreamIntLogger(System.out, LogLevel.INFO),
-				notificationConfig.getHubServerConfig().getHubUrl(), 
-				notificationConfig.getHubServerConfig().getGlobalCredentials().getUsername(), 
-				notificationConfig.getHubServerConfig().getGlobalCredentials().getDecryptedPassword(),
-                notificationConfig.getHubServerConfig().getTimeout());
-	}
-	
-	/**
-	 * Gets the hub services factory.
-	 *
-	 * @return the hub services factory
-	 * @throws Exception the exception
-	 */
-	public  HubServicesFactory getHubServicesFactory() throws Exception {
-	        return new HubServicesFactory(getRestConnection());
-    }
 
 	/* (non-Javadoc)
 	 * @see org.springframework.batch.item.ItemReader#read()
@@ -87,9 +65,9 @@ public class NotificationReader implements ItemReader<NotificationResults> {
         Date endDate = dateRange.getEnd();
         startDate.setTime(startDate.getTime() - (60000));
         
-		NotificationDataService notificationDataService = this.getHubServicesFactory().
+		NotificationDataService notificationDataService = notificationConfig.getHubServicesFactory().
 				createNotificationDataService(
-				getRestConnection().logger);
+						notificationConfig.getRestConnection().logger);
 			
 		NotificationResults  notificationResults = notificationDataService.getAllNotifications(
 				startDate, endDate);
@@ -98,6 +76,8 @@ public class NotificationReader implements ItemReader<NotificationResults> {
 			return null;
 		}
 		logger.info("Item Count is ====> " + notificationResults.getNotificationContentItems().size());
+		
+		jmsConfig.getNotificationResultsTemplate().convertAndSend(jmsConfig.getGson().toJson(notificationResults));
 		return notificationResults;
 	}
 

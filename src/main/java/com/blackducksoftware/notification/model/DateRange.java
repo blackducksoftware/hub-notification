@@ -4,9 +4,6 @@
 package com.blackducksoftware.notification.model;
 
 import java.util.Date;
-
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class DateRange.
  */

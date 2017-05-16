@@ -10,7 +10,7 @@ hub:
     cronExpression: 0 0/1 * 1/1 * *
     
 spring:
-    batch.job.enabled: true
+    batch.job.enabled: false
     cloud.config.server.git.uri: /refresh-config
     activemq.broker-url: vm://localhost:61616
     activemq.user: admin

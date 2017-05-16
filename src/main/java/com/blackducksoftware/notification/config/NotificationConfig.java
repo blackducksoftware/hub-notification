@@ -11,6 +11,11 @@ import org.springframework.context.annotation.Configuration;
 
 import com.blackducksoftware.integration.hub.builder.HubServerConfigBuilder;
 import com.blackducksoftware.integration.hub.global.HubServerConfig;
+import com.blackducksoftware.integration.hub.rest.CredentialsRestConnection;
+import com.blackducksoftware.integration.hub.rest.RestConnection;
+import com.blackducksoftware.integration.hub.service.HubServicesFactory;
+import com.blackducksoftware.integration.log.LogLevel;
+import com.blackducksoftware.integration.log.PrintStreamIntLogger;
 
 /**
  * The Class NotificationConfig.
@@ -64,4 +69,32 @@ public class NotificationConfig {
 	public String getCronExpression() {
 		return cronExpression;
 	}
+	
+	
+	/**
+	 * Gets the rest connection.
+	 *
+	 * @return the rest connection
+	 * @throws Exception the exception
+	 */
+	@Bean
+	public RestConnection getRestConnection() throws Exception{		
+		return new CredentialsRestConnection(new PrintStreamIntLogger(System.out, LogLevel.INFO),
+				this.getHubServerConfig().getHubUrl(), 
+				this.getHubServerConfig().getGlobalCredentials().getUsername(), 
+				this.getHubServerConfig().getGlobalCredentials().getDecryptedPassword(),
+                this.getHubServerConfig().getTimeout());
+	}
+	
+	 /**
+ 	 * Gets the hub services factory.
+ 	 *
+ 	 * @return the hub services factory
+ 	 * @throws Exception the exception
+ 	 */
+	@Bean
+ 	public  HubServicesFactory getHubServicesFactory() throws Exception {
+	    return new HubServicesFactory(getRestConnection());
+	}
+	
 }

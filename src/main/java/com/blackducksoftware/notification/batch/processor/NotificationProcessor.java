@@ -3,20 +3,28 @@
  */
 package com.blackducksoftware.notification.batch.processor;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 
+import com.blackducksoftware.integration.hub.dataservice.model.ProjectVersionModel;
 import com.blackducksoftware.integration.hub.dataservice.notification.NotificationResults;
 import com.blackducksoftware.integration.hub.dataservice.notification.model.NotificationContentItem;
-import com.blackducksoftware.integration.hub.rest.CredentialsRestConnection;
-import com.blackducksoftware.integration.hub.rest.RestConnection;
-import com.blackducksoftware.integration.hub.service.HubServicesFactory;
-import com.blackducksoftware.integration.log.LogLevel;
-import com.blackducksoftware.integration.log.PrintStreamIntLogger;
+import com.blackducksoftware.integration.hub.model.view.VulnerableComponentView;
+import com.blackducksoftware.integration.hub.request.HubPagedRequest;
+import com.blackducksoftware.integration.hub.service.HubResponseService;
+import com.blackducksoftware.notification.config.JMSConfig;
 import com.blackducksoftware.notification.config.NotificationConfig;
+import com.google.gson.GsonBuilder;
 
 /**
  * The Class NotificationProcessor.
@@ -26,6 +34,9 @@ public class NotificationProcessor implements ItemProcessor<NotificationResults,
 	/** The notification config. */
 	private NotificationConfig notificationConfig;
 	
+	/** The jms config. */
+	private JMSConfig jmsConfig;
+	
 	/** The logger. */
 	private final Logger logger = LoggerFactory.getLogger(NotificationProcessor.class);
 	
@@ -33,34 +44,13 @@ public class NotificationProcessor implements ItemProcessor<NotificationResults,
 	 * Instantiates a new notification processor.
 	 *
 	 * @param notificationConfig the notification config
+	 * @param jmsConfig the jms config
 	 */
-	public NotificationProcessor(NotificationConfig  notificationConfig) {
+	public NotificationProcessor(NotificationConfig  notificationConfig, JMSConfig jmsConfig) {
 		this.notificationConfig = notificationConfig;
+		this.jmsConfig = jmsConfig;
 	}
 	
-	/**
-	 * Gets the rest connection.
-	 *
-	 * @return the rest connection
-	 * @throws Exception the exception
-	 */
-	public RestConnection getRestConnection() throws Exception{		
-		return new CredentialsRestConnection(new PrintStreamIntLogger(System.out, LogLevel.INFO),
-				notificationConfig.getHubServerConfig().getHubUrl(), 
-				notificationConfig.getHubServerConfig().getGlobalCredentials().getUsername(), 
-				notificationConfig.getHubServerConfig().getGlobalCredentials().getDecryptedPassword(),
-                notificationConfig.getHubServerConfig().getTimeout());
-	}
-	
-	 /**
- 	 * Gets the hub services factory.
- 	 *
- 	 * @return the hub services factory
- 	 * @throws Exception the exception
- 	 */
- 	public  HubServicesFactory getHubServicesFactory() throws Exception {
-	        return new HubServicesFactory(getRestConnection());
-	 }
 	
 	/* (non-Javadoc)
 	 * @see org.springframework.batch.item.ItemProcessor#process(java.lang.Object)
@@ -68,26 +58,42 @@ public class NotificationProcessor implements ItemProcessor<NotificationResults,
 	@Override
 	public NotificationResults process(NotificationResults item) throws Exception {
 		SortedSet<NotificationContentItem>  contentItems = item.getNotificationContentItems();
-		contentItems.forEach(contentItem -> {
-			StringBuilder builder = new StringBuilder(1000);
-			builder.append("\n\n Project Version : ");
-			builder.append(contentItem.getProjectVersion() + "\n");
-			builder.append("Created At : ");
-			builder.append(contentItem.getCreatedAt() + "\n");
-			builder.append("Component Issue Link : ");
-			builder.append(contentItem.getComponentIssueLink() +"\n");
-			builder.append("Component Name : ");
-			builder.append(contentItem.getComponentName() + "\n");
-			builder.append("Component Version : ");
-			builder.append(contentItem.getComponentVersion() + "\n");
-			builder.append("Component Version URL : ");
-			builder.append(contentItem.getComponentVersionUrl() + "\n");
-			builder.append("Created AT : ");
-			builder.append(contentItem.getCreatedAt());
-			builder.append("================================================= \n");
-			logger.info(builder.toString());
+		//Get a distinct list of Projects
+		List<ProjectVersionModel> projectVersionItems = contentItems.stream().map(NotificationContentItem::getProjectVersion).
+				filter(distinctByKey(p -> p.getProjectName() + " - " + p.getProjectVersionName())).collect(Collectors.toList());
+		projectVersionItems.forEach(projectVersionItem -> {
+			String vulnerabilityLink = projectVersionItem.getVulnerableComponentsLink();
+			logger.info(projectVersionItem.getProjectName() + " " + projectVersionItem.getProjectVersionName());
+			logger.info("Vulnerability Link " + vulnerabilityLink);
+			try {
+				HubResponseService hubResponseService = notificationConfig.getHubServicesFactory().createHubResponseService();
+				HubPagedRequest hubPagedRequest = hubResponseService.getHubRequestFactory().createPagedRequest(vulnerabilityLink);
+				List<VulnerableComponentView> compList = hubResponseService.getAllItems(hubPagedRequest, VulnerableComponentView.class);
+				logger.info(" Bom List " + compList);
+				logger.info("BOM JSON " + jmsConfig.getGson().toJson(compList));
+				Map<String, String> vulnerableMap = new HashMap<>();
+				vulnerableMap.put(jmsConfig.getGson().toJson(projectVersionItem), jmsConfig.getGson().toJson(compList));
+				jmsConfig.getBomComponenentsTemplate().convertAndSend(vulnerableMap);
+			} catch (Exception e) {
+				logger.error("Exception Retrieving Bom Components for " + projectVersionItem.getRiskProfileLink(), e );
+			}
 		});
+		String json = new GsonBuilder().create().toJson(item);
+		jmsConfig.getNotificationResultsTemplate().convertAndSend(json);
 		return item;
 	}
+	
+	/**
+	 * Distinct by key.
+	 *
+	 * @param <T> the generic type
+	 * @param keyExtractor the key extractor
+	 * @return the predicate
+	 */
+	public <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) 
+    {
+        Map<Object, Boolean> map = new ConcurrentHashMap<>();
+        return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
 
 }

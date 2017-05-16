@@ -10,7 +10,6 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.listener.JobExecutionListenerSupport;
 import org.springframework.stereotype.Component;
 
-// TODO: Auto-generated Javadoc
 /**
  * The listener interface for receiving jobCompletionNotification events.
  * The class that is interested in processing a jobCompletionNotification
