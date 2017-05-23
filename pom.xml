@@ -8,7 +8,6 @@
     <version>3.0.0</version>
   </parent>
 
-  <groupId>com.blackducksoftware</groupId>
   <artifactId>hub-notification</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
