@@ -24,7 +24,6 @@ import com.blackducksoftware.integration.hub.request.HubPagedRequest;
 import com.blackducksoftware.integration.hub.service.HubResponseService;
 import com.blackducksoftware.notification.config.JMSConfig;
 import com.blackducksoftware.notification.config.NotificationConfig;
-import com.google.gson.GsonBuilder;
 
 /**
  * The Class NotificationProcessor.
