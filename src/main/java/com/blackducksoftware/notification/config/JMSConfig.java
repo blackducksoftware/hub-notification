@@ -24,6 +24,7 @@
 package com.blackducksoftware.notification.config;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.dozer.DozerBeanMapper;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -121,4 +122,8 @@ public class JMSConfig {
     	return new GsonBuilder().create();
     }
 
+    @Bean
+    public DozerBeanMapper getDozerBeanMapper() {
+    	return new DozerBeanMapper();
+    }
 }
