@@ -19,8 +19,7 @@
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <!-- This is used in lieu of Spring Boot's parent -->
+      <dependency><!-- This is used in lieu of Spring Boot's parent -->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
         <version>1.5.3.RELEASE</version>

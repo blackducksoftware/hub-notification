@@ -7,14 +7,17 @@ hub:
     password: blackduck
     timeout: 120000
     serverurl: http://eng-hub-valid03.dc1.lan
-    cronExpression: 0 0/1 * 1/1 * *
+    cronExpression: 0 0/5 * 1/1 * *
     
 spring:
-    batch.job.enabled: false
+    batch.job.enabled: true
     cloud.config.server.git.uri: /refresh-config
     activemq.broker-url: vm://localhost:61616
     activemq.user: admin
     activemq.password: admin
+
+server:
+    port: 0
 ---
 #  development configuration section 0 0/1 * * * *
 spring:
