@@ -83,6 +83,7 @@ public class NotificationProcessor implements ItemProcessor<NotificationResults,
 		//Get a distinct list of Projects
 		List<ProjectVersionModel> projectVersionItems = contentItems.stream().map(NotificationContentItem::getProjectVersion).
 				filter(distinctByKey(p -> p.getProjectName() + " - " + p.getProjectVersionName())).collect(Collectors.toList());
+		//Map<String, List<VulnerableComponentView>> vulnerableMap = new HashMap<>();
 		Map<String, String> vulnerableMap = new HashMap<>();
 		//projectVersionItems.forEach(projectVersionItem -> {
 			//String vulnerabilityLink = projectVersionItem.getVulnerableComponentsLink();
@@ -96,9 +97,9 @@ public class NotificationProcessor implements ItemProcessor<NotificationResults,
 				logger.info(" Bom List " + compList);
 				//vulnerableMap.put(jmsConfig.getGson().toJson(projectVersionItem), jmsConfig.getGson().toJson(compList));
 				vulnerableMap.put("BOM_COMPONENTS", jmsConfig.getGson().toJson(compList));
+				//vulnerableMap.put("BOM_COMPONENTS", compList);
 			} catch (Exception e) {
 				//logger.error("Exception Retrieving Bom Components for " + projectVersionItem.getRiskProfileLink(), e );
-				
 			}
 		//});
 		jmsConfig.getBomComponenentsTemplate().convertAndSend(vulnerableMap);
