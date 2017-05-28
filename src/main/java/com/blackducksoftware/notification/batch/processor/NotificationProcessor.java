@@ -79,29 +79,29 @@ public class NotificationProcessor implements ItemProcessor<NotificationResults,
 	 */
 	@Override
 	public NotificationResults process(NotificationResults item) throws Exception {
+		logger.info("Processing Notification Results ...............");
 		SortedSet<NotificationContentItem>  contentItems = item.getNotificationContentItems();
 		//Get a distinct list of Projects
 		List<ProjectVersionModel> projectVersionItems = contentItems.stream().map(NotificationContentItem::getProjectVersion).
 				filter(distinctByKey(p -> p.getProjectName() + " - " + p.getProjectVersionName())).collect(Collectors.toList());
-		//Map<String, List<VulnerableComponentView>> vulnerableMap = new HashMap<>();
 		Map<String, String> vulnerableMap = new HashMap<>();
-		//projectVersionItems.forEach(projectVersionItem -> {
-			//String vulnerabilityLink = projectVersionItem.getVulnerableComponentsLink();
-			String vulnerabilityLink = "http://eng-hub-valid03.dc1.lan/api/projects/25871c7a-1121-4346-9692-a3cd63e6df34/versions/57f48961-12af-40e4-aef3-9071573549ea/vulnerable-bom-components";
-			//logger.info(projectVersionItem.getProjectName() + " " + projectVersionItem.getProjectVersionName());
+		projectVersionItems.forEach(projectVersionItem -> {
+			String vulnerabilityLink = projectVersionItem.getVulnerableComponentsLink();
+			logger.info(projectVersionItem.getProjectName() + " " + projectVersionItem.getProjectVersionName());
 			logger.info("Vulnerability Link " + vulnerabilityLink);
 			try {
 				HubResponseService hubResponseService = notificationConfig.getHubServicesFactory().createHubResponseService();
+				long requestStartTime = System.currentTimeMillis();
 				HubPagedRequest hubPagedRequest = hubResponseService.getHubRequestFactory().createPagedRequest(vulnerabilityLink);
 				List<VulnerableComponentView> compList = hubResponseService.getAllItems(hubPagedRequest, VulnerableComponentView.class);
+				long requestEndTime = System.currentTimeMillis();
+				logger.info("Time to complete BOM Component request " + (requestEndTime - requestStartTime) + " milliseconds");
 				logger.info(" Bom List " + compList);
-				//vulnerableMap.put(jmsConfig.getGson().toJson(projectVersionItem), jmsConfig.getGson().toJson(compList));
-				vulnerableMap.put("BOM_COMPONENTS", jmsConfig.getGson().toJson(compList));
-				//vulnerableMap.put("BOM_COMPONENTS", compList);
+				vulnerableMap.put(jmsConfig.getGson().toJson(projectVersionItem), jmsConfig.getGson().toJson(compList));
 			} catch (Exception e) {
-				//logger.error("Exception Retrieving Bom Components for " + projectVersionItem.getRiskProfileLink(), e );
+				logger.error("Exception Retrieving Bom Components for " + projectVersionItem.getRiskProfileLink(), e );
 			}
-		//});
+		});
 		jmsConfig.getBomComponenentsTemplate().convertAndSend(vulnerableMap);
 		return item;
 	}

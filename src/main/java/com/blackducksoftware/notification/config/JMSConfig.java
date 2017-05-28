@@ -126,4 +126,6 @@ public class JMSConfig {
     public DozerBeanMapper getDozerBeanMapper() {
     	return new DozerBeanMapper();
     }
+    
+    
 }

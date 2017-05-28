@@ -28,7 +28,6 @@ package com.blackducksoftware.notification.batch.reader;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
@@ -87,22 +86,14 @@ public class NotificationReader implements ItemReader<NotificationResults> {
 		DateRange dateRange = createDateRange();
 		Date startDate = dateRange.getStart();
         Date endDate = dateRange.getEnd();
-        startDate.setTime(startDate.getTime() - (60000));
+        startDate.setTime(startDate.getTime() - (60000 * 5));
         
 		NotificationDataService notificationDataService = notificationConfig.getHubServicesFactory().
 				createNotificationDataService(
 						notificationConfig.getRestConnection().logger);
-			
-		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-		Date date1 = dateFormat.parse("2017-05-10T15:06:35.504Z");
-		Date date2 = dateFormat.parse("2017-05-10T16:06:35.504Z");
 		
 		NotificationResults  notificationResults = notificationDataService.getAllNotifications(
-				date1, date2);
-		
-//		NotificationResults  notificationResults = notificationDataService.getAllNotifications(
-//				startDate, endDate);
+				startDate, endDate);
 		
 		if(notificationResults.getNotificationContentItems().isEmpty()) {
 			return null;
