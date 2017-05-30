@@ -86,7 +86,7 @@ public class NotificationReader implements ItemReader<NotificationResults> {
 		DateRange dateRange = createDateRange();
 		Date startDate = dateRange.getStart();
         Date endDate = dateRange.getEnd();
-        startDate.setTime(startDate.getTime() - (60000 * 5));
+        startDate.setTime(startDate.getTime() - (60000 * 2));
         
 		NotificationDataService notificationDataService = notificationConfig.getHubServicesFactory().
 				createNotificationDataService(
@@ -114,7 +114,7 @@ public class NotificationReader implements ItemReader<NotificationResults> {
         String path = "";
         try {
             final String configLocation = System.getProperty("/");
-            final File file = new File(configLocation, "activation-lastrun.txt");
+            final File file = new File(configLocation, "notification-lastrun.txt");
             path = file.getCanonicalPath();
         } catch (final IOException ex) {
             logger.error("Cannot find last run file path", ex);

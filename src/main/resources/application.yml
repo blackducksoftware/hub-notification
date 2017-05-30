@@ -7,14 +7,24 @@ hub:
     password: blackduck
     timeout: 120000
     serverurl: http://eng-hub-verify01.dc1.lan
-    cronExpression: 0 0/5 * 1/1 * *
+    cronExpression: 0 0/2 * 1/1 * *
     
 spring:
-    batch.job.enabled: true
+    batch.job.enabled: false
     cloud.config.server.git.uri: /refresh-config
     activemq.broker-url: vm://localhost:61616
     activemq.user: admin
     activemq.password: admin
+    
+logging:
+  file: logs/notifications.log
+  pattern:
+    console: "%d %-5level %logger : %msg%n"
+    file: "%d %-5level [%thread] %logger : %msg%n"
+  level:
+    root: INFO
+    org.springframework: WARN
+    com.blackducksoftware.notification: INFO   
 
 server:
     port: 0

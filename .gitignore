@@ -4,8 +4,10 @@
 ### Eclipse ###
 
 .metadata
+.eclipse-pmd
 bin/
 tmp/
+logs/
 *.tmp
 *.bak
 *.swp
@@ -98,6 +100,11 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 .mvn
+
+### App Specific ###
+activemq-data
+notification-lastrun.txt
+
 
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar
