@@ -14,17 +14,7 @@ spring:
     cloud.config.server.git.uri: /refresh-config
     activemq.broker-url: vm://localhost:61616
     activemq.user: admin
-    activemq.password: admin
-    
-logging:
-  file: logs/notifications.log
-  pattern:
-    console: "%d %-5level %logger : %msg%n"
-    file: "%d %-5level [%thread] %logger : %msg%n"
-  level:
-    root: INFO
-    org.springframework: WARN
-    com.blackducksoftware.notification: INFO   
+    activemq.password: admin    
 
 server:
     port: 0

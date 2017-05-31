@@ -28,8 +28,8 @@ package com.blackducksoftware.notification.batch.writer;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.batch.item.ItemWriter;
 
 import com.blackducksoftware.integration.hub.dataservice.notification.NotificationResults;
@@ -39,9 +39,7 @@ import com.blackducksoftware.integration.hub.dataservice.notification.Notificati
  */
 public class NotificationWriter implements ItemWriter<NotificationResults>  {
 	
-	/** The Constant log. */
-	private static final Logger log = LoggerFactory.getLogger(NotificationWriter.class);
-	
+	private final Logger  logger = LogManager.getLogger(NotificationWriter.class);
 	/* (non-Javadoc)
 	 * @see org.springframework.batch.item.ItemWriter#write(java.util.List)
 	 */

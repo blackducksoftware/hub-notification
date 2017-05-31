@@ -28,8 +28,8 @@ package com.blackducksoftware.notification.config;
 
 import java.util.Date;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
@@ -85,10 +85,7 @@ public class BatchConfig {
     @Autowired
     public JMSConfig jmsConfig;
     
-    
-    /** The Constant log. */
-    private static final Logger log = LoggerFactory.getLogger(BatchConfig.class);
-    
+    private final Logger  log = LogManager.getLogger(BatchConfig.class); 
     /**
      * Perform.
      *

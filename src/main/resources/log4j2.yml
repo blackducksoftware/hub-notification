@@ -1,0 +1,48 @@
+Configuration:
+  name: notification-log-config
+  Properties:
+    Property:
+      name: log-path
+      value: logs
+  Appenders:
+    Console:
+      name: console-appender
+      target: SYSTEM_OUT
+      PatternLayout:
+        pattern: '[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n'
+    File:
+      name: file-appender
+      fileName: ${log-path}/notification-error.log
+      PatternLayout:
+        pattern: '[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n'
+    RollingFile:
+    - name: rollingfile-appender
+      fileName: ${log-path}/notification.log
+      filePattern: logs/archive/notification.log.%d{yyyy-MM-dd-hh-mm}.gz
+      PatternLayout:
+        pattern: '[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n'
+      Policies:
+        SizeBasedTriggeringPolicy:
+          size: 1 MB
+      DefaultRollOverStrategy:
+        max: 30
+  Loggers:
+    Root:
+      level: warn
+      AppenderRef:
+      - ref: console-appender
+        level: warn
+      - ref: file-appender
+        level: eror
+    Logger:
+    - name: com.blackducksoftware.notification
+      additivity: false
+      level: debug
+      AppenderRef:
+      - ref: console-appender
+        level: info
+      - ref: file-appender
+        level: error
+      - ref: rollingfile-appender
+        level: debug
+        

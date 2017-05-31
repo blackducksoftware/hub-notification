@@ -35,8 +35,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.batch.item.ItemProcessor;
 
 import com.blackducksoftware.integration.hub.dataservice.model.ProjectVersionModel;
@@ -58,9 +58,8 @@ public class NotificationProcessor implements ItemProcessor<NotificationResults,
 	
 	/** The jms config. */
 	private JMSConfig jmsConfig;
-	
-	/** The logger. */
-	private final Logger logger = LoggerFactory.getLogger(NotificationProcessor.class);
+		
+	private final Logger  logger = LogManager.getLogger(NotificationProcessor.class);
 	
 	/**
 	 * Instantiates a new notification processor.
