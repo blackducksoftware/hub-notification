@@ -6,15 +6,20 @@ hub:
     username: sysadmin
     password: blackduck
     timeout: 120000
-    serverurl: http://eng-hub-verify01.dc1.lan
+    serverurl: http://eng-hub-verify01.dc1.lan:8080
+    #serverurl: http://localhost:8080
     cronExpression: 0 0/1 * 1/1 * *
     
 spring:
     batch.job.enabled: false
+    datasource.initialize: false
     cloud.config.server.git.uri: /refresh-config
     activemq.broker-url: vm://localhost:61616
     activemq.user: admin
     activemq.password: admin
+
+server:
+    port: 0
 ---
 #  development configuration section 0 0/1 * * * *
 spring:

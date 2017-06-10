@@ -87,15 +87,16 @@ public class NotificationProcessor implements ItemProcessor<NotificationResults,
 		projectVersionItems.forEach(projectVersionItem -> {
 			String vulnerabilityLink = projectVersionItem.getVulnerableComponentsLink();
 			logger.info(projectVersionItem.getProjectName() + " " + projectVersionItem.getProjectVersionName());
-			logger.info("Vulnerability Link " + vulnerabilityLink);
+			logger.debug("Vulnerability Link " + vulnerabilityLink);
 			try {
 				HubResponseService hubResponseService = notificationConfig.getHubServicesFactory().createHubResponseService();
 				long requestStartTime = System.currentTimeMillis();
 				HubPagedRequest hubPagedRequest = hubResponseService.getHubRequestFactory().createPagedRequest(vulnerabilityLink);
+				logger.debug("hubPagedRequest " + hubPagedRequest);
 				List<VulnerableComponentView> compList = hubResponseService.getAllItems(hubPagedRequest, VulnerableComponentView.class);
 				long requestEndTime = System.currentTimeMillis();
 				logger.info("Time to complete BOM Component request " + (requestEndTime - requestStartTime) + " milliseconds");
-				logger.info(" Bom List " + compList);
+				logger.debug(" Bom List " + compList);
 				vulnerableMap.put(jmsConfig.getGson().toJson(projectVersionItem), jmsConfig.getGson().toJson(compList));
 			} catch (Exception e) {
 				logger.error("Exception Retrieving Bom Components for " + projectVersionItem.getRiskProfileLink(), e );

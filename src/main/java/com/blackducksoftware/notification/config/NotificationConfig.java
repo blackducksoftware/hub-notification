@@ -102,7 +102,7 @@ public class NotificationConfig {
 	 */
 	@Bean
 	public RestConnection getRestConnection() throws Exception{		
-		return new CredentialsRestConnection(new PrintStreamIntLogger(System.out, LogLevel.INFO),
+		return new CredentialsRestConnection(new PrintStreamIntLogger(System.out, LogLevel.TRACE),
 				this.getHubServerConfig().getHubUrl(), 
 				this.getHubServerConfig().getGlobalCredentials().getUsername(), 
 				this.getHubServerConfig().getGlobalCredentials().getDecryptedPassword(),

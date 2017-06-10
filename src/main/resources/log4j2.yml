@@ -28,19 +28,19 @@ Configuration:
         max: 30
   Loggers:
     Root:
-      level: warn
+      level: info
       AppenderRef:
       - ref: console-appender
-        level: warn
+        level: debug
       - ref: file-appender
-        level: eror
+        level: error
     Logger:
-    - name: com.blackducksoftware.notification
+    - name: com.blackducksoftware
       additivity: false
-      level: debug
+      level: info
       AppenderRef:
       - ref: console-appender
-        level: info
+        level: debug
       - ref: file-appender
         level: error
       - ref: rollingfile-appender

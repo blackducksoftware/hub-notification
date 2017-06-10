@@ -42,7 +42,6 @@ import org.springframework.stereotype.Component;
 import com.blackducksoftware.integration.hub.dataservice.notification.NotificationDataService;
 import com.blackducksoftware.integration.hub.dataservice.notification.NotificationResults;
 import com.blackducksoftware.integration.hub.rest.RestConnection;
-import com.blackducksoftware.notification.batch.processor.NotificationProcessor;
 import com.blackducksoftware.notification.config.JMSConfig;
 import com.blackducksoftware.notification.config.NotificationConfig;
 import com.blackducksoftware.notification.model.DateRange;
@@ -89,6 +88,7 @@ public class NotificationReader implements ItemReader<NotificationResults> {
 		DateRange dateRange = createDateRange();
 		Date startDate = dateRange.getStart();
 		Date endDate = dateRange.getEnd();
+		//Temp Fix
 		startDate.setTime(startDate.getTime() - (60000 * 2));
 
 		NotificationDataService notificationDataService = notificationConfig.getHubServicesFactory()
@@ -99,7 +99,7 @@ public class NotificationReader implements ItemReader<NotificationResults> {
 		if (notificationResults.getNotificationContentItems().isEmpty()) {
 			return null;
 		}
-		logger.info("Item Count is ====> " + notificationResults.getNotificationContentItems().size());
+		logger.debug("Item Count is ====> " + notificationResults.getNotificationContentItems().size());
 
 		jmsConfig.getNotificationResultsTemplate().convertAndSend(jmsConfig.getGson().toJson(notificationResults));
 		return notificationResults;
