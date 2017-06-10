@@ -6,8 +6,8 @@ hub:
     username: sysadmin
     password: blackduck
     timeout: 120000
-    #serverurl: http://eng-hub-verify01.dc1.lan:8080
-    serverurl: https://localhost
+    serverurl: http://eng-hub-verify01.dc1.lan:8080
+    #serverurl: https://localhost
     cronExpression: 0 0/1 * 1/1 * *
     
 spring:
