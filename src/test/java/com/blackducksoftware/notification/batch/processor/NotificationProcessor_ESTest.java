@@ -49,7 +49,7 @@ import com.blackducksoftware.integration.hub.dataservice.notification.Notificati
 import com.blackducksoftware.notification.config.JMSConfig;
 import com.blackducksoftware.notification.config.NotificationConfig;
 
-@RunWith(EvoRunner.class) @EvoRunnerParameters(mockJVMNonDeterminism = true, useVFS = true, useVNET = true, resetStaticState = true, separateClassLoader = true, useJEE = true) 
+@RunWith(EvoRunner.class) @EvoRunnerParameters(mockJVMNonDeterminism = true, useVFS = true, useVNET = true, resetStaticState = true, separateClassLoader = false, useJEE = true) 
 public class NotificationProcessor_ESTest extends NotificationProcessor_ESTest_scaffolding {
 
   @Test(timeout = 4000)

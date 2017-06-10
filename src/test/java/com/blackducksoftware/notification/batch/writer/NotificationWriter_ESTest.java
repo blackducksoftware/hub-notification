@@ -42,7 +42,7 @@ import org.junit.runner.RunWith;
 
 import com.blackducksoftware.integration.hub.dataservice.notification.NotificationResults;
 
-@RunWith(EvoRunner.class) @EvoRunnerParameters(mockJVMNonDeterminism = true, useVFS = true, useVNET = true, resetStaticState = true, separateClassLoader = true, useJEE = true) 
+@RunWith(EvoRunner.class) @EvoRunnerParameters(mockJVMNonDeterminism = true, useVFS = true, useVNET = true, resetStaticState = true, separateClassLoader = false, useJEE = true) 
 public class NotificationWriter_ESTest extends NotificationWriter_ESTest_scaffolding {
 
   @Test(timeout = 4000)

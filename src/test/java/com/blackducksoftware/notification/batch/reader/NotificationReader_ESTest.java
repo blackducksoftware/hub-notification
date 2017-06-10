@@ -43,7 +43,7 @@ import com.blackducksoftware.notification.config.JMSConfig;
 import com.blackducksoftware.notification.config.NotificationConfig;
 import com.blackducksoftware.notification.model.DateRange;
 
-@RunWith(EvoRunner.class) @EvoRunnerParameters(mockJVMNonDeterminism = true, useVFS = true, useVNET = true, resetStaticState = true, separateClassLoader = true, useJEE = true) 
+@RunWith(EvoRunner.class) @EvoRunnerParameters(mockJVMNonDeterminism = true, useVFS = true, useVNET = true, resetStaticState = true, separateClassLoader = false, useJEE = true) 
 public class NotificationReader_ESTest extends NotificationReader_ESTest_scaffolding {
 
   @Test(timeout = 4000)

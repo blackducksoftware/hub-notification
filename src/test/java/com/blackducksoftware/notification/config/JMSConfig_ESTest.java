@@ -42,7 +42,6 @@ import org.springframework.jms.core.JmsTemplate;
 
 import com.google.gson.Gson;
 
-@RunWith(EvoRunner.class) @EvoRunnerParameters(mockJVMNonDeterminism = true, useVFS = true, useVNET = true, resetStaticState = true, separateClassLoader = true, useJEE = true) 
 public class JMSConfig_ESTest extends JMSConfig_ESTest_scaffolding {
 
   @Test(timeout = 4000)

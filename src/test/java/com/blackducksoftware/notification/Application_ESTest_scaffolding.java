@@ -51,8 +51,8 @@ public class Application_ESTest_scaffolding {
   public static void initEvoSuiteFramework() { 
     org.evosuite.runtime.RuntimeSettings.className = "com.blackducksoftware.notification.Application"; 
     org.evosuite.runtime.GuiSupport.initialize(); 
-    org.evosuite.runtime.RuntimeSettings.maxNumberOfThreads = 100; 
-    org.evosuite.runtime.RuntimeSettings.maxNumberOfIterationsPerLoop = 10000; 
+    org.evosuite.runtime.RuntimeSettings.maxNumberOfThreads = 1000; 
+    org.evosuite.runtime.RuntimeSettings.maxNumberOfIterationsPerLoop = 100000; 
     org.evosuite.runtime.RuntimeSettings.mockSystemIn = true; 
     org.evosuite.runtime.RuntimeSettings.sandboxMode = org.evosuite.runtime.sandbox.Sandbox.SandboxMode.RECOMMENDED; 
     org.evosuite.runtime.sandbox.Sandbox.initializeSecurityManagerForSUT(); 

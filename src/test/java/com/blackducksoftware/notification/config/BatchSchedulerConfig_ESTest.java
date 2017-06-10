@@ -45,7 +45,7 @@ import org.springframework.batch.core.repository.support.MapJobRepositoryFactory
 import org.springframework.batch.support.transaction.ResourcelessTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
-@RunWith(EvoRunner.class) @EvoRunnerParameters(mockJVMNonDeterminism = true, useVFS = true, useVNET = true, resetStaticState = true, separateClassLoader = true, useJEE = true) 
+@RunWith(EvoRunner.class) @EvoRunnerParameters(mockJVMNonDeterminism = true, useVFS = true, useVNET = true, resetStaticState = false, separateClassLoader = true, useJEE = true) 
 public class BatchSchedulerConfig_ESTest extends BatchSchedulerConfig_ESTest_scaffolding {
 
   @Test(timeout = 4000)
