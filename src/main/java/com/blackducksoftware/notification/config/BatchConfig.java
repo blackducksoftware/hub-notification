@@ -175,6 +175,4 @@ public class BatchConfig {
                 .taskExecutor(getTaskExecutor())
                 .build();
     }
-    
-   
 }

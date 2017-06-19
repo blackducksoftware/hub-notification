@@ -26,7 +26,7 @@ package com.blackducksoftware.notification.config;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.ExitStatus;
@@ -44,7 +44,6 @@ import com.blackducksoftware.notification.Application;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 @SpringBootTest(classes = { Application.class })
-@Ignore 
 public class NotificationTest {
 
 	/** The notification config. */
@@ -56,7 +55,7 @@ public class NotificationTest {
 	 *
 	 * @throws Exception the exception
 	 */
-	//@Test
+	@Test
 	public void testJob() throws Exception {
 		JobExecution jobExecution = notificationConfig.perform();
 		Assert.assertNotNull(jobExecution);
@@ -73,5 +72,4 @@ public class NotificationTest {
 		Assert.assertNotNull(failureExceptions);
 		Assert.assertTrue(failureExceptions.isEmpty());
 	}
-
 }
