@@ -16,7 +16,6 @@ local.properties
 .settings/
 .loadpath
 .recommenders
-.evosuite
 
 # External tool builders
 .externalToolBuilders/
